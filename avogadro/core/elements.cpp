@@ -26,8 +26,9 @@ static std::vector<std::string> CustomElementSymbols;
 static std::vector<std::string> CustomElementNames;
 
 // Match carbon's radii
-static std::vector<double> CustomElementCovalentRadii;
-static std::vector<double> CustomElementVDWRadii;
+static double CustomElementCovalentRadius = element_covalent[6];
+static double CustomElementVDWRadius = element_VDW[6];
+
 inline std::string encodeCustomElement(unsigned char atomicNumber)
 {
   std::string result;
@@ -100,8 +101,6 @@ public:
   {
     CustomElementSymbols.resize(CustomElementCount);
     CustomElementNames.resize(CustomElementCount);
-    CustomElementCovalentRadii.resize(CustomElementCount, element_covalent[6]); 
-    CustomElementVDWRadii.resize(CustomElementCount, element_VDW[6]); 
     std::string suffix;
     for (unsigned char i = CustomElementMin; i <= CustomElementMax; ++i) {
       suffix = encodeCustomElement(i);
@@ -114,19 +113,7 @@ public:
 } CustomElementTableInitializer;
 
 } // end anon namespace
-void setCustomElementCovalentRadius(unsigned char atomicNumber, double radius)
-{
-  if (isCustomElement(atomicNumber)) {
-    CustomElementCovalentRadii[atomicNumber - CustomElementMin] = radius;
-  }
-}
 
-void setCustomElementVDWRadius(unsigned char atomicNumber, double radius)
-{
-  if (isCustomElement(atomicNumber)) {
-    CustomElementVDWRadii[atomicNumber - CustomElementMin] = radius;
-  }
-}
 unsigned char Elements::elementCount()
 {
   return element_count;
@@ -217,8 +204,6 @@ unsigned char Elements::guessAtomicNumber(const std::string& inputStr)
 
 const char* Elements::name(unsigned char atomicNumber)
 {
-  if (atomicNumber == 0) 
-    return "Centroid";  
   if (atomicNumber < element_count)
     return element_names[atomicNumber];
   else if (isCustomElement(atomicNumber))
@@ -229,8 +214,6 @@ const char* Elements::name(unsigned char atomicNumber)
 
 const char* Elements::symbol(unsigned char atomicNumber)
 {
-  if (atomicNumber == 0) 
-    return "Cen";
   if (atomicNumber < element_count)
     return element_symbols[atomicNumber];
   else if (isCustomElement(atomicNumber))
@@ -241,8 +224,6 @@ const char* Elements::symbol(unsigned char atomicNumber)
 
 double Elements::mass(unsigned char atomicNumber)
 {
-  if (atomicNumber == 0) 
-    return 0.0; 
   if (atomicNumber < element_count)
     return element_masses[atomicNumber];
   else
@@ -251,12 +232,10 @@ double Elements::mass(unsigned char atomicNumber)
 
 double Elements::radiusVDW(unsigned char atomicNumber)
 {
-  if (atomicNumber == 0) 
-    return 0.0;  
   if (atomicNumber < element_count)
     return element_VDW[atomicNumber];
   else if (isCustomElement(atomicNumber))
-    return CustomElementVDWRadii[atomicNumber - CustomElementMin];
+    return CustomElementVDWRadius;
   else
     return element_VDW[0];
 }
@@ -266,7 +245,7 @@ double Elements::radiusCovalent(unsigned char atomicNumber)
   if (atomicNumber < element_count)
     return element_covalent[atomicNumber];
   else if (isCustomElement(atomicNumber))
-    return CustomElementCovalentRadii[atomicNumber - CustomElementMin];
+    return CustomElementCovalentRadius;
   else
     return element_covalent[0];
 }
