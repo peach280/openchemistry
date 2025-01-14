@@ -51,31 +51,8 @@ public:
     for (QTextBlock current = start; current.isValid() && current != end;
          current = current.next()) {
           const QTextLayout* layout(current.layout());
-
-      // Assuming 'layout' is a valid QTextLayout pointer and 'tempCursor' is a QTextCursor
-      if(QT_VERSION==6)
-      {
-        QList<QTextLayout::FormatRange> formats = layout->formats(); // Get the current formats
-        for (const QTextLayout::FormatRange& range : formats) 
-        {
-          const int startIdx = current.position() + range.start - selectionStart;
-          const int endIdx = startIdx + range.length;
-
-          // Check if the range is valid
-          if (endIdx <= 0 || startIdx >= endOfDocument)
-              continue;
-
-          // Set the cursor position and apply the character format
-          tempCursor.setPosition(qMax(startIdx, 0));
-          tempCursor.setPosition(qMin(endIdx, endOfDocument), QTextCursor::KeepAnchor);
-          tempCursor.setCharFormat(range.format);
-        } 
-      }
-      else
-      {
-        
         foreach (const QTextLayout::FormatRange& range,
-                  layout->additionalFormats()) {
+                  layout->formats()) {
             const int startIdx = current.position() + range.start - selectionStart;
             const int endIdx = startIdx + range.length;
             if (endIdx <= 0 || startIdx >= endOfDocument)
@@ -84,7 +61,7 @@ public:
             tempCursor.setPosition(qMin(endIdx, endOfDocument),
                                   QTextCursor::KeepAnchor);
             tempCursor.setCharFormat(range.format);
-          }
+          
 
       }     
 
