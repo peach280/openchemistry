@@ -31,7 +31,7 @@ TEST(FileBrowseWidgetTest, setFileName)
 
   FileBrowseWidget widget;
 
-  QSignalSpy spy(&widget, SIGNAL(fileNameChanged(QString)));
+  QSignalSpy spy(&widget, &FileBrowseWidget::fileNameChanged);
   widget.setFileName("some file");
   EXPECT_EQ(1, spy.count());
   EXPECT_STREQ("some file", qPrintable(spy.front().front().toString()));

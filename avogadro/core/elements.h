@@ -11,6 +11,11 @@
 #include <string>
 
 namespace Avogadro::Core {
+  void setCustomElementCovalentRadius(unsigned char atomicNumber, double radius);
+
+
+void setCustomElementVDWRadius(unsigned char atomicNumber, double radius);
+
 
 const unsigned char element_count = 119; //!< from 0 to 118
 

@@ -52,17 +52,22 @@ public:
          current = current.next()) {
       const QTextLayout* layout(current.layout());
 
-      foreach (const QTextLayout::FormatRange& range,
-               layout->additionalFormats()) {
-        const int startIdx = current.position() + range.start - selectionStart;
-        const int endIdx = startIdx + range.length;
-        if (endIdx <= 0 || startIdx >= endOfDocument)
-          continue;
-        tempCursor.setPosition(qMax(startIdx, 0));
-        tempCursor.setPosition(qMin(endIdx, endOfDocument),
-                               QTextCursor::KeepAnchor);
-        tempCursor.setCharFormat(range.format);
-      }
+      // Assuming 'layout' is a valid QTextLayout pointer and 'tempCursor' is a QTextCursor
+QList<QTextLayout::FormatRange> formats = layout->formats(); // Get the current formats
+
+for (const QTextLayout::FormatRange& range : formats) {
+    const int startIdx = current.position() + range.start - selectionStart;
+    const int endIdx = startIdx + range.length;
+
+    // Check if the range is valid
+    if (endIdx <= 0 || startIdx >= endOfDocument)
+        continue;
+
+    // Set the cursor position and apply the character format
+    tempCursor.setPosition(qMax(startIdx, 0));
+    tempCursor.setPosition(qMin(endIdx, endOfDocument), QTextCursor::KeepAnchor);
+    tempCursor.setCharFormat(range.format);
+  }
     }
 
     // Reset the user states since they are not interesting

@@ -3,7 +3,7 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}"
   "${AvogadroLibs_BINARY_DIR}/avogadro/molequeue"
   "${AvogadroLibs_SOURCE_DIR}/tests/core")
 
-find_package(Qt5 COMPONENTS Widgets Network Test REQUIRED)
+find_package(Qt6 COMPONENTS Widgets Network Test REQUIRED)
 
 # Pull in MoleQueue for QtJson
 find_package(MoleQueue REQUIRED NO_MODULE)
@@ -50,7 +50,7 @@ endforeach()
 # Add a single executable for all of our tests.
 add_executable(AvogadroQtGuiTests ${testSrcs})
 target_link_libraries(AvogadroQtGuiTests Avogadro::QtGui Avogadro::MoleQueue
-  MoleQueueClient ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB} Qt5::Widgets Qt5::Test)
+  MoleQueueClient ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB} Qt6::Widgets Qt6::Test)
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
